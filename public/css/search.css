@@ -1,0 +1,70 @@
+#tracksSearchedList,
+#artistsSearchedList,
+#albumsSearchedList {
+    padding: 0 20px;
+    list-style-type: none;
+}
+
+#tracksSearchedTitle,
+#artistsSearchedTitle,
+#albumsSearchedTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 60px;
+}
+
+#artistsSearchedList,
+#albumsSearchedList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+}
+
+.topAlbum {
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.topAlbum img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.topAlbum img:hover {
+    transform: var(--transformMagnify);
+}
+
+.topAlbum a {
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.topAlbum a:hover {
+    color: var(--red);
+}
+
+@media (max-width: 1200px) {
+    #artistsSearchedList {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #albumsSearchedList {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    #artistsSearchedList {
+        grid-template-columns: 1fr;
+    }
+
+    #albumsSearchedList {
+        grid-template-columns: 1fr;
+    }
+}

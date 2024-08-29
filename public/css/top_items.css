@@ -1,0 +1,176 @@
+#topItemsList {
+    padding: 0 20px;
+    list-style-type: none;
+    margin-top: 40px;
+}
+
+#topItemsTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#topTrack {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    background-color: var(--darkBlack);
+    border-radius: 15px;
+    padding: 10px 20px;
+    justify-content: space-between;
+    transition: var(--transition);
+}
+
+#topTrack img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10000px;
+    margin-right: 20px;
+}
+
+.trackDetails {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.trackDetails a {
+    color: var(--white);
+    text-align: left;
+    margin: 2px 0;
+    text-decoration: none;
+    padding: 0;
+}
+
+.trackDetails a {
+    pointer-events: none;
+}
+
+.trackDetails a .trackName {
+    pointer-events: auto;
+}
+
+.trackDetails a .trackArtistName {
+    pointer-events: auto;
+}
+
+.trackName,
+.trackArtistName {
+    transition: var(--transition);
+}
+
+.trackDuration {
+    color: var(--white);
+    text-align: right;
+    margin-left: 20px;
+}
+
+.trackAlbum a {
+    text-align: left;
+    margin: 2px 10px;
+    text-decoration: none;
+    color: var(--white);
+    transition: var(--transition);
+}
+
+.rankTrackNumber {
+    color: var(--white);
+    margin-right: 20px;
+}
+
+.rankArtistNumber {
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.topArtistsList {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+}
+
+.topArtist a {
+    padding: 16px;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.topArtist img {
+    width: 300px;
+    height: 300px;
+    border-radius: 10000px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.pageSwitching {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#next,
+#previous {
+    background-color: var(--lightBlack);
+    color: var(--white);
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 20px;
+    height: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin: 40px 10px 40px 0;
+}
+
+#pageNumber {
+    background-color: var(--lightBlack);
+    color: var(--white);
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    height: 40px;
+    cursor: text;
+    width: 60px;
+    transition: var(--transition);
+}
+
+.trackName:hover,
+.trackArtistName:hover,
+.trackAlbum a:hover,
+.topArtist a:hover {
+    color: var(--red);
+}
+
+#topItemsType:hover,
+#timeRange:hover,
+#topTrack:hover,
+#next:hover,
+#previous:hover,
+#pageNumber:hover {
+    background-color: var(--veryLightBlack);
+}
+
+.topArtist img:hover {
+    transform: var(--transformMagnify);
+}
+
+@media (max-width: 1200px) {
+    .topArtistsList {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .topArtistsList {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,126 @@
+:root {
+    --red: #e75151;
+    --lightBlack: #333;
+    --veryLightBlack: #555;
+    --darkBlack: #191919;
+    --white: #ffffff;
+    --pageBg: linear-gradient(135deg, black 0%, #242424 100%) no-repeat center center fixed;
+    --transition: all 0.3s ease;
+    --animationFadeIn: fadeIn 1s ease-out;
+    --transformTranslateUp: translateY(-5px);
+    --transformMagnify: scale(1.1);
+    --redButtonShadow: 0 5px 15px rgba(231, 81, 81, 0.4);
+    --imagesBorder: 4px solid var(--red);
+
+    --iconFontSize: 4rem;
+
+    --titleFontSize: 2.5rem;
+    --titleMarginBottom: 30px;
+    --titleLineHeight: 1.2;
+    --titleMarginTopBottom: 30px;
+    --titleFontWeight: bold;
+
+    --featureFontSize: 2rem;
+    --featureMarginTopBottom: 10px;
+
+    --subtitleFontSize: 1.5rem;
+    --subtitleMarginTopBottom: 20px;
+    --subtitleFontWeight: bold;
+
+    --textFontSize: 1.1rem;
+    --textMarginTopBottom: 10px;
+    --textFontWeight: bold;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito", sans-serif;
+}
+
+body,
+html {
+    height: 100%;
+    background: var(--pageBg);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.welcomeButton {
+    color: var(--white);
+    background-color: var(--red);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.welcomeButton:hover {
+    background-color: var(--red);
+    transform: var(--transformTranslateUp);
+    box-shadow: var(--redButtonShadow);
+}
+
+.title {
+    font-size: var(--titleFontSize);
+    font-weight: var(--titleFontWeight);
+    color: var(--red);
+    margin-top: var(--titleMarginTopBottom);
+    margin-bottom: var(--titleMarginTopBottom);
+    line-height: var(--titleLineHeight);
+    font-weight: var(--titleFontWeight);
+}
+
+.subtitle {
+    font-size: var(--subtitleFontSize);
+    font-weight: var(--subtitleFontWeight);
+    color: var(--white);
+    margin-top: var(--subtitleMarginTopBottom);
+    margin-bottom: var(--subtitleMarginTopBottom);
+    font-weight: var(--subtitleFontWeight);
+}
+
+.text {
+    font-size: var(--textFontSize);
+    color: var(--white);
+    margin-top: var(--textMarginTopBottom);
+    margin-bottom: var(--textMarginTopBottom);
+    font-weight: var(--textFontWeight);
+}
+
+.select {
+    background-color: var(--lightBlack);
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    margin: 0 auto;
+    height: 40px;
+    width: 150px;
+    padding: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.label {
+    margin: 10px auto;
+}
+
+.hidden {
+    display: none;
+}

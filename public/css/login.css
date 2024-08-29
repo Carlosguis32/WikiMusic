@@ -1,0 +1,44 @@
+#loginComponents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 15px;
+}
+
+.userInput {
+    background-color: var(--darkBlack);
+    color: var(--white);
+    font-size: var(--textFontSize);
+    border: none;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: text;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    width: 350px;
+    transition: var(--transition);
+}
+
+.userInput:hover {
+    background-color: var(--lightBlack);
+}
+
+#loginButton {
+    margin: 30px;
+}
+
+a {
+    color: var(--red);
+    text-decoration: none;
+    font-weight: 600;
+    margin: 5px;
+    transition: var(--transition);
+}
+
+a:hover {
+    text-decoration: underline;
+}

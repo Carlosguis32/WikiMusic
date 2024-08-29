@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+            rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+        <link rel="stylesheet" href="/css/menu_bar.css" />
+        <link rel="stylesheet" href="/css/common.css" />
+    </head>
+
+    <body>
+        <nav>
+            <ul id="menuBar">
+                <li><a href="/html/home"> Home </a></li>
+                <li><a href="/html/top_items"> Top Items </a></li>
+                <li><a href="/html/recently_played"> Recently Played </a></li>
+                <li><a href="/html/profile"> Profile </a></li>
+                <li>
+                    <div class="searchContainer">
+                        <input
+                            type="text"
+                            id="userInput"
+                            class="searchInput"
+                            placeholder="Search"
+                            onkeydown="keyDownUserInput(event)" />
+                        <button
+                            class="searchButton"
+                            onclick="searchPanel(document.getElementById('userInput').value, '9')">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </body>
+</html>

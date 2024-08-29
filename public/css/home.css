@@ -1,0 +1,51 @@
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin: 40px;
+    margin-bottom: 80px;
+}
+
+.homePageComponent {
+    background-color: var(--darkBlack);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border-radius: 50px;
+    min-height: 300px;
+}
+
+.homePageButton {
+    background-color: var(--darkBlack);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    border-radius: 50px;
+    gap: 30px;
+    font-size: var(--subtitleFontSize);
+    transition: var(--transition);
+}
+
+.homePageButton:hover {
+    background-color: var(--lightBlack);
+}
+
+.homeIcon {
+    font-size: var(--iconFontSize);
+    color: var(--red);
+}
+
+#homeTitle {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

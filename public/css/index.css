@@ -1,0 +1,52 @@
+#welcomeContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.welcomeButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--lightBlack);
+    border-radius: 60px;
+    margin-top: 40px;
+}
+
+#featuresSection {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    gap: 20px;
+}
+
+.feature {
+    background-color: var(--lightBlack);
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.feature:hover {
+    transform: var(--transformTranslateUp);
+}
+
+.feature i {
+    font-size: var(--featureFontSize);
+    margin-top: var(--featureMarginTopBottom);
+    margin-bottom: var(--featureMarginTopBottom);
+    color: var(--red);
+}
+
+#welcomeContainer > * {
+    animation: var(--animationFadeIn);
+}
