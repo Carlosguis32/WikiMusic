@@ -116,6 +116,7 @@ app.get("/verify/:token", async (req, res) => {
 
 //AUTHENTICATING NEW USER AND SENDING EMAIL
 app.post("/html/signup/auth", async (req, res) => {
+    console.log("Code here 1");
     try {
         const existingUser = await User.findOne({ email: req.body.email });
         const validationResult = await validate({ email: req.body.email });
@@ -148,6 +149,8 @@ app.post("/html/signup/auth", async (req, res) => {
             { expiresIn: "5m" }
         );
 
+        console.log("Code here 2");
+
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -172,6 +175,8 @@ app.post("/html/signup/auth", async (req, res) => {
 
             html: emailHtml,
         };
+
+        console.log("Code here 3");
 
         try {
             transporter.sendMail(mailConfigurations, function (error, info) {
