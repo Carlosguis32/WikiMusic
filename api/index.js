@@ -195,21 +195,44 @@ app.post("/api/signup", async (req, res) => {
 //AUTHENTICATING EXISTING USER
 app.post("/api/login", async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                status: "error",
+                message: "Email and password are required",
+            });
+        }
+
+        const user = await User.findOne({ email }).select("+password");
         if (!user) {
-            return res.status(401).json({ error: "User not found" });
+            return res.status(401).json({
+                status: "error",
+                message: "Invalid credentials",
+            });
         }
 
-        const passwordMatch = await bcrypt.compare(req.body.password, user.password);
-
+        const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ error: "Wrong password" });
+            return res.status(401).json({
+                status: "error",
+                message: "Invalid credentials",
+            });
         }
 
-        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-        res.status(200).json({ token });
+        const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        res.status(200).json({
+            status: "success",
+            message: "Login successful",
+            data: { token },
+        });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Login error:", error);
+        res.status(500).json({
+            status: "error",
+            message: "An internal server error occurred",
+        });
     }
 });
 
