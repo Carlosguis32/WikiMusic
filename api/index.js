@@ -115,8 +115,7 @@ app.get("/verify/:token", async (req, res) => {
 });
 
 //AUTHENTICATING NEW USER AND SENDING EMAIL
-app.post("/html/signup/auth", async (req, res) => {
-    console.log("Code here 1");
+app.post("/api/signup", async (req, res) => {
     try {
         const existingUser = await User.findOne({ email: req.body.email });
         const validationResult = await validate({ email: req.body.email });
@@ -149,8 +148,6 @@ app.post("/html/signup/auth", async (req, res) => {
             { expiresIn: "5m" }
         );
 
-        console.log("Code here 2");
-
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -176,8 +173,6 @@ app.post("/html/signup/auth", async (req, res) => {
             html: emailHtml,
         };
 
-        console.log("Code here 3");
-
         try {
             transporter.sendMail(mailConfigurations, function (error, info) {
                 if (error) {
@@ -197,7 +192,7 @@ app.post("/html/signup/auth", async (req, res) => {
 });
 
 //AUTHENTICATING EXISTING USER
-app.post("/html/login/auth", async (req, res) => {
+app.post("/api/login", async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
@@ -238,6 +233,10 @@ app.get("/api/user", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }
+});
+
+app.use("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/error.html"));
 });
 
 //SERVER LISTENING ON PORT

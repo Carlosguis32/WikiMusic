@@ -1,4 +1,5 @@
 async function login() {
+    alert("Login function called");
     const config = await fetch("/env").then((config) => config.json());
 
     const response = await fetch("/html/login/auth", {
@@ -32,5 +33,5 @@ async function logout() {
     const config = await fetch("/env").then((config) => config.json());
     sessionStorage.clear();
     localStorage.clear();
-    window.location.href = config.rootDomain + "/index";
+    window.location.href = "/index";
 }
