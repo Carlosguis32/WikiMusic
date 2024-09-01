@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="/css/background.css" />
-        <link rel="stylesheet" href="/css/login.css" />
-        <link rel="stylesheet" href="/css/fonts.css" />
-        <link rel="icon" href="/icons/music_notes.svg" type="image/x-icon" />
+        <link rel="stylesheet" href="/css/common.css" />
+        <link rel="stylesheet" href="/css/signup.css" />
+        <link rel="icon" href="/icons/music_notes.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
             rel="stylesheet" />
 
-        <script src="/js/login.js"></script>
-        <script src="/js/variables.js"></script>
+        <script src="/js/common.js"></script>
+        <script src="/js/signup.js"></script>
 
-        <title id="indexTitle">Wikimusic - Login</title>
+        <title>WikiMusic - Sign Up</title>
     </head>
 
     <body>
-        <div class="loginComponents">
-            <h1 id="loginTitle" class="nunitoTitle">Log into your account</h1>
+        <div id="signupComponents">
+            <h1 class="title">Create an account</h1>
 
-            <input type="text" id="emailInput" class="nunitoText" placeholder="Enter your email" />
-            <input type="password" id="passwordInput" class="nunitoText" placeholder="Enter your password" />
+            <input type="text" id="usernameInput" class="userInput" placeholder="Enter your username" />
+            <input type="text" id="emailInput" class="userInput" placeholder="Enter your email" />
+            <input type="password" id="passwordInput" class="userInput" placeholder="Create your password" />
+            <input type="password" id="confirmPasswordInput" class="userInput" placeholder="Confirm your password" />
 
-            <button id="loginButton" class="nunitoSmallTitle" onclick="login()">Log in</button>
-
-            <p id="dontHaveAnAccount" class="nunitoText">Don't have an account? <a href="/html/signup"> Sign Up </a></p>
-
-            <p id="forgotPassword" class="nunitoText">
-                <a href="/html/forgot_password"> Forgot your password? </a>
-            </p>
+            <button id="signupButton" class="welcomeButton" onclick="signup()">Sign Up</button>
         </div>
+
+        <dialog id="modalDialog" class="modalDialog">
+            <p id="modalDialogText" class="subtitle textModal"></p>
+            <p id="modalDialogDescription" class="subtitle textModal"></p>
+            <button
+                id="modalDialogCloseButton"
+                class="welcomeButton modalDialogCloseButton"
+                onclick="closeErrorDialog()">
+                Close
+            </button>
+        </dialog>
     </body>
 </html>

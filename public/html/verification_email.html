@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+            rel="stylesheet" />
+        <title>Email Verification</title>
+        <style>
+            body {
+                color: #191919;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #191919;
+            }
+
+            .emailContainer {
+                background-color: #191919;
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            p {
+                text-align: center;
+            }
+
+            .buttonContainer {
+                text-align: center;
+                margin: 30px 0;
+            }
+
+            .welcomeButton {
+                font-family: "Nunito", sans-serif;
+                color: white;
+                background-color: #e75151;
+                border: none;
+                padding: 15px 30px;
+                border-radius: 30px;
+                cursor: pointer;
+                font-size: 1.2rem;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+            }
+
+            .title {
+                font-family: "Nunito", sans-serif;
+                font-size: 2.5rem;
+                font-weight: bold;
+                color: #e75151;
+                margin-top: 30px;
+                margin-bottom: 30px;
+                line-height: 1.2;
+            }
+
+            .subtitle {
+                font-family: "Nunito", sans-serif;
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: white;
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+
+            u + #body a {
+                color: white !important;
+                text-decoration: none !important;
+                font-family: "Nunito", sans-serif !important;
+                font-size: 1.5rem !important;
+                font-weight: bold !important;
+            }
+        </style>
+    </head>
+    <body id="body">
+        <div class="emailContainer">
+            <h1 class="title">Verify Your Email</h1>
+            <p class="subtitle">
+                Thank you for signing up! Please click the button below to verify your email address.
+            </p>
+            <div class="buttonContainer">
+                <a id="verifyEmailButton" href="${process.env.ROOT_DOMAIN}/verify/${token}" class="welcomeButton"
+                    >Verify Email</a
+                >
+            </div>
+            <p class="subtitle">If you didn't create an account, you can safely ignore this email.</p>
+        </div>
+    </body>
+</html>

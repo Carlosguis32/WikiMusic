@@ -16,7 +16,7 @@ const getAccessToken = async () => {
             "&code=" +
             sessionStorage.getItem("authentification_code") +
             "&redirect_uri=" +
-            encodeURI(config.rootDomain + "home") +
+            encodeURI(config.rootDomain + "/html/home") +
             "&client_id=" +
             config.clientID +
             "&client_secret=" +

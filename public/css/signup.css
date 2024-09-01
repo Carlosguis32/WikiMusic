@@ -1,0 +1,12 @@
+#signupComponents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 15px;
+}
+
+#signupButton {
+    margin: 30px;
+}

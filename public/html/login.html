@@ -11,6 +11,7 @@
             rel="stylesheet" />
 
         <script src="/js/login.js"></script>
+        <script src="/js/common.js"></script>
 
         <title>WikiMusic - Login</title>
     </head>
@@ -30,5 +31,16 @@
                 <a href="/html/forgot_password">Forgot your password?</a>
             </p>
         </div>
+
+        <dialog id="modalDialog" class="modalDialog">
+            <p id="modalDialogText" class="subtitle textModal"></p>
+            <p id="modalDialogDescription" class="subtitle textModal"></p>
+            <button
+                id="modalDialogCloseButton"
+                class="welcomeButton modalDialogCloseButton"
+                onclick="closeErrorDialog()">
+                Close
+            </button>
+        </dialog>
     </body>
 </html>
