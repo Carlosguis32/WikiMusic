@@ -1,5 +1,5 @@
 async function signup() {
-    const response = await fetch("/html/signup/auth", {
+    const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

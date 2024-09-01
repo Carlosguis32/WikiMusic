@@ -2,7 +2,7 @@ async function login() {
     alert("Login function called");
     const config = await fetch("/env").then((config) => config.json());
 
-    const response = await fetch("/html/login/auth", {
+    const response = await fetch("/api/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
