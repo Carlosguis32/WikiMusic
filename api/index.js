@@ -1,7 +1,6 @@
 //IMPORTING REQUIRED PACKAGES
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
@@ -114,7 +113,6 @@ try {
 
 //JSON PARSING
 app.use(express.json());
-app.use(cors());
 
 //VERIFYING EMAIL AND SAVING USER TO DATABASE
 app.get("/api/verify/:token", async (req, res) => {
@@ -352,15 +350,15 @@ app.use("*", (req, res) => {
 
 //SERVER LISTENING ON PORT
 const server = app
-    .listen(process.env.PORT, () => {
-        console.log(`Server running on port ${process.env.PORT}`);
+    .listen(4000, () => {
+        console.log(`Server running on port ${4000}`);
     })
     .on("error", (e) => {
         if (e.code === "EADDRINUSE") {
             console.log("Address in use, retrying...");
             setTimeout(() => {
                 server.close();
-                server.listen(process.env.PORT);
+                server.listen(4000);
             }, 1000);
         }
     });
