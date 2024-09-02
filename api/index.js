@@ -193,6 +193,7 @@ app.post(
             const { username, email, password } = req.body;
 
             const existingUser = await User.findOne({ email });
+            console.log(existingUser);
             if (existingUser) {
                 return res.status(400).json({ error: "User already exists" });
             }
@@ -203,6 +204,7 @@ app.post(
                 validateMx: true,
                 validateTypo: true,
             });
+            console.log(emailValidation);
             if (!emailValidation.valid) {
                 return res.status(400).json({ error: "Invalid email" });
             }
@@ -226,6 +228,7 @@ app.post(
                     pass: process.env.EMAIL_PASSWORD,
                 },
             });
+            console.log(transporter);
 
             const htmlPath = path.join(__dirname, "../public/html/verification_email.html");
             let emailHtml = fs.readFileSync(htmlPath, "utf8");
@@ -238,6 +241,7 @@ app.post(
                 subject: "Email Verification",
                 html: emailHtml,
             };
+            console.log(mailOptions);
 
             await transporter.sendMail(mailOptions);
             await newUser.save();
