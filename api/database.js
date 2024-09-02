@@ -1,16 +1,24 @@
 const mongoose = require("mongoose");
 
+let cachedDb = null;
+
 const connectToMongoDB = async () => {
-    await mongoose
-        .connect(process.env.MONGODB_URI, {
+    if (cachedDb) {
+        return cachedDb;
+    }
+
+    try {
+        const client = await mongoose.connect(process.env.MONGODB_URI, {
             serverSelectionTimeoutMS: 5000,
-        })
-        .then(() => {
-            console.log("Connected to MongoDB");
-        })
-        .catch((error) => {
-            console.error("Error connecting to MongoDB:", error);
         });
+
+        cachedDb = client.connection;
+        console.log("MongoDB connected successfully");
+        return cachedDb;
+    } catch (error) {
+        console.error("Error when connecting to MongoDB: ", error);
+        throw error;
+    }
 };
 
 module.exports = connectToMongoDB;
