@@ -9,10 +9,18 @@ const { body, validationResult } = require("express-validator");
 const { validate } = require("deep-email-validator");
 const path = require("path");
 const app = express();
+const connectToMongoDB = require("../api/database.js");
 require("dotenv").config();
 
 //SERVING STATIC FILES
 app.use(express.static(path.join(__dirname, "../public")));
+
+//CONNECTING TO DATABASE
+try {
+    connectToMongoDB();
+} catch (error) {
+    console.error("Database connection error:", error);
+}
 
 //ENDPOINT TO GET ENVIRONMENT VARIABLES NEEDED IN CLIENT SIDE
 app.get("/env", (req, res) => {
@@ -64,20 +72,6 @@ app.get("/html/email_verified", (req, res) => {
 app.get("/html/error/:status/:statusText", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/html/error.html"));
 });
-
-//CONNECTING TO MONGODB
-mongoose
-    .connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        serverSelectionTimeoutMS: 5000,
-    })
-    .then(() => {
-        console.log("Connected to MongoDB");
-    })
-    .catch((error) => {
-        console.error("Error connecting to MongoDB:", error);
-    });
 
 //CREATING USER SCHEMA
 const userSchema = new mongoose.Schema({
