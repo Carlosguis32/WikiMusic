@@ -13,19 +13,8 @@ const app = express();
 const connectToMongoDB = require("../api/database.js");
 require("dotenv").config();
 
-//JSON PARSING
-app.use(express.json());
-app.use(cors());
-
 //SERVING STATIC FILES
 app.use(express.static(path.join(__dirname, "../public")));
-
-//CONNECTING TO DATABASE
-try {
-    connectToMongoDB();
-} catch (error) {
-    console.error("Database connection error:", error);
-}
 
 //ENDPOINT TO GET ENVIRONMENT VARIABLES NEEDED IN CLIENT SIDE
 app.get("/env", (req, res) => {
@@ -115,6 +104,17 @@ const userSchema = new mongoose.Schema({
 
 //CREATING USER MODEL
 const User = mongoose.model("User", userSchema);
+
+//CONNECTING TO DATABASE
+try {
+    connectToMongoDB();
+} catch (error) {
+    console.error("Database connection error:", error);
+}
+
+//JSON PARSING
+app.use(express.json());
+app.use(cors());
 
 //VERIFYING EMAIL AND SAVING USER TO DATABASE
 app.get("/api/verify/:token", async (req, res) => {
