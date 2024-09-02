@@ -1,5 +1,5 @@
 async function signup() {
-    const response = await fetch("/api/signup", {
+    let response = await fetch("/api/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -12,6 +12,8 @@ async function signup() {
         }),
     });
 
+    response = await response.json();
+
     if (response.ok) {
         document.getElementById("modalDialogText").textContent = "Your account has been created";
         document.getElementById("modalDialogDescription").textContent =
@@ -19,7 +21,7 @@ async function signup() {
         const modalDialog = document.getElementById("modalDialog");
         modalDialog.showModal();
     } else {
-        errorHandler(await response.json());
+        errorHandler(response);
     }
 
     modalDialog.addEventListener("close", function onClose() {

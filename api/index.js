@@ -268,6 +268,9 @@ app.post("/api/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        console.log(email);
+        console.log(password);
+
         if (!email || !password) {
             return res.status(400).json({
                 status: "error",
@@ -276,6 +279,7 @@ app.post("/api/login", async (req, res) => {
         }
 
         const user = await User.findOne({ email }).select("+password");
+        console.log(user);
 
         if (!user) {
             return res.status(401).json({
