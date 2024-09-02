@@ -12,19 +12,18 @@ async function signup() {
         }),
     });
 
-    if (response.status === 200) {
+    if (response.ok) {
         document.getElementById("modalDialogText").textContent = "Your account has been created";
         document.getElementById("modalDialogDescription").textContent =
             "A confirmation email has been sent to your email address";
         const modalDialog = document.getElementById("modalDialog");
         modalDialog.showModal();
     } else {
-        const error = await response.json();
-        errorHandler(error);
+        errorHandler(await response.json());
     }
 
     modalDialog.addEventListener("close", function onClose() {
-        if (response.status === 200) {
+        if (response.ok) {
             window.location.href = "/html/login";
         }
     });

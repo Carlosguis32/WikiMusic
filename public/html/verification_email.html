@@ -92,11 +92,9 @@
                 Thank you for signing up! Please click the button below to verify your email address.
             </p>
             <div class="buttonContainer">
-                <a id="verifyEmailButton" href="${process.env.ROOT_DOMAIN}/verify/${token}" class="welcomeButton"
-                    >Verify Email</a
-                >
+                <a id="verifyEmailButton" href="${verificationUrl}" class="welcomeButton">Verify Email</a>
             </div>
-            <p class="subtitle">If you didn't create an account, you can safely ignore this email.</p>
+            <p class="subtitle">If you didn't create an account, you can ignore this email.</p>
         </div>
     </body>
 </html>

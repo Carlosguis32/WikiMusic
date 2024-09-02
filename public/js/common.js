@@ -5,8 +5,9 @@ function msToMinutesAndSeconds(ms) {
 }
 
 function errorHandler(response) {
+    const errorMessage = (response.errors && response.errors[0] && response.errors[0].msg) || response.error;
     document.getElementById("modalDialogText").textContent = "Oops, something went wrong";
-    document.getElementById("modalDialogDescription").textContent = response.error;
+    document.getElementById("modalDialogDescription").textContent = errorMessage;
     const errorDialog = document.getElementById("modalDialog");
     errorDialog.showModal();
 }

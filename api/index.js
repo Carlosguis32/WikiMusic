@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { body, validationResult } = require("express-validator");
 const { validate } = require("deep-email-validator");
 const path = require("path");
 const app = express();
@@ -80,9 +81,37 @@ mongoose
 
 //CREATING USER SCHEMA
 const userSchema = new mongoose.Schema({
-    username: String,
-    email: String,
-    password: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 20,
+    },
+
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+    },
+
+    password: {
+        type: String,
+        required: true,
+        select: false,
+    },
+
+    verified: {
+        type: Boolean,
+        required: true,
+    },
+
+    verificationToken: {
+        type: String,
+    },
 });
 
 //CREATING USER MODEL
@@ -92,105 +121,147 @@ const User = mongoose.model("User", userSchema);
 app.use(express.json());
 
 //VERIFYING EMAIL AND SAVING USER TO DATABASE
-app.get("/verify/:token", async (req, res) => {
+app.get("/api/verify/:token", async (req, res) => {
     try {
         const token = req.params.token;
 
         if (!token) {
-            return res.status(401).json({ error: "Unauthorized" });
+            return res.status(400).json({
+                status: "error",
+                error: "Verification token is missing",
+            });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(401).json({
+                status: "error",
+                error: "Invalid or expired verification token",
+            });
+        }
 
-        const newUser = new User({
-            username: decoded.username,
+        const user = await User.findOne({
             email: decoded.email,
-            password: decoded.password,
+            verificationToken: token,
+            verified: false,
         });
 
-        await newUser.save();
-        res.status(201).sendFile(path.join(__dirname, "../public/html/email_verified.html"));
+        if (!user) {
+            return res.status(404).json({
+                status: "error",
+                error: "User not found or already verified",
+            });
+        }
+
+        user.verified = true;
+        user.verificationToken = undefined;
+        await user.save();
+
+        res.sendFile(path.join(__dirname, "../public/html/email_verified.html"));
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Verification error:", error);
+        res.status(500).json({
+            status: "error",
+            error: "An error occurred during email verification",
+        });
     }
 });
 
 //AUTHENTICATING NEW USER AND SENDING EMAIL
-app.post("/api/signup", async (req, res) => {
-    try {
-        const existingUser = await User.findOne({ email: req.body.email });
-        const validationResult = await validate({ email: req.body.email });
-
-        if (existingUser) {
-            return res.status(400).json({ error: "User already exists" });
-        } else if (!validationResult.valid) {
-            return res.status(400).json({ error: "Invalid email" });
-        } else if (req.body.password.length < 8) {
-            return res.status(400).json({ error: "Password must be at least 8 characters long" });
-        } else if (req.body.password !== req.body.confirmPassword) {
-            return res.status(400).json({ error: "Passwords do not match" });
-        } else if (req.body.password.length > 50) {
-            return res.status(400).json({ error: "Password must be at most 50 characters long" });
-        } else if (req.body.username.length < 3) {
-            return res.status(400).json({ error: "Username must be at least 3 characters long" });
-        } else if (req.body.username.length > 20) {
-            return res.status(400).json({ error: "Username must be at most 20 characters long" });
-        }
-
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-        const token = jwt.sign(
-            {
-                username: req.body.username,
-                email: req.body.email,
-                password: hashedPassword,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "5m" }
-        );
-
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        });
-
-        const htmlPath = path.join(__dirname, "../public/html/verification_email.html");
-        let emailHtml = fs.readFileSync(htmlPath, "utf8");
-        emailHtml = emailHtml.replace(
-            "${process.env.ROOT_DOMAIN}/verify/${token}",
-            `${process.env.ROOT_DOMAIN}/verify/${token}`
-        );
-
-        const mailConfigurations = {
-            from: process.env.EMAIL_USERNAME,
-
-            to: req.body.email,
-
-            subject: "Email Verification",
-
-            html: emailHtml,
-        };
-
+app.post(
+    "/api/signup",
+    [
+        body("username").isLength({ min: 3, max: 20 }).trim().escape(),
+        body("email").isEmail().normalizeEmail(),
+        body("password").isLength({ min: 8, max: 50 }),
+        body("confirmPassword").custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error("Passwords do not match");
+            }
+            return true;
+        }),
+    ],
+    async (req, res) => {
         try {
-            transporter.sendMail(mailConfigurations, function (error, info) {
-                if (error) {
-                    console.log("Error sending email:", error);
-                    return res.status(500).json({ error: "Error sending email" });
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
+            const { username, email, password } = req.body;
+
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ error: "User already exists" });
+            }
+
+            const emailValidation = await validate({
+                email,
+                validateRegex: true,
+                validateMx: true,
+                validateTypo: true,
+            });
+            if (!emailValidation.valid) {
+                return res.status(400).json({ error: "Invalid email" });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 12);
+
+            const verificationToken = jwt.sign({ username, email }, process.env.JWT_SECRET, { expiresIn: "10m" });
+
+            const newUser = new User({
+                username,
+                email,
+                password: hashedPassword,
+                verified: false,
+                verificationToken,
+            });
+
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+            });
+
+            const htmlPath = path.join(__dirname, "../public/html/verification_email.html");
+            let emailHtml = fs.readFileSync(htmlPath, "utf8");
+            const verificationUrl = `${process.env.ROOT_DOMAIN}/api/verify/${verificationToken}`;
+            emailHtml = emailHtml.replace("${verificationUrl}", verificationUrl);
+
+            const mailOptions = {
+                from: process.env.EMAIL_USERNAME,
+                to: email,
+                subject: "Email Verification",
+                html: emailHtml,
+            };
+
+            await transporter.sendMail(mailOptions);
+            await newUser.save();
+
+            setTimeout(async () => {
+                const user = await User.findOne({ email });
+                if (user && !user.verified) {
+                    await User.deleteOne({ email });
                 }
-                console.log("Email Sent Successfully:", info.response);
-                return res.status(200).json({ message: "Email sent successfully" });
+            }, 10 * 60 * 1000);
+
+            res.status(201).json({
+                status: "success",
+                message: "User registered successfully. Please check your email to verify your account.",
             });
         } catch (error) {
-            return res.status(500).json({ error: "Internal server error" });
+            console.error("Signup error:", error);
+            res.status(500).json({
+                status: "error",
+                error: "An error occurred during registration. Please try again later.",
+            });
         }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Internal server error" });
     }
-});
+);
 
 //AUTHENTICATING EXISTING USER
 app.post("/api/login", async (req, res) => {
@@ -200,7 +271,7 @@ app.post("/api/login", async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({
                 status: "error",
-                message: "Email and password are required",
+                error: "Email and password are required",
             });
         }
 
@@ -208,15 +279,23 @@ app.post("/api/login", async (req, res) => {
         if (!user) {
             return res.status(401).json({
                 status: "error",
-                message: "Invalid credentials",
+                error: "Invalid credentials",
+            });
+        }
+
+        if (!user.verified) {
+            return res.status(403).json({
+                status: "error",
+                error: "Email not verified",
             });
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
+
         if (!passwordMatch) {
             return res.status(401).json({
                 status: "error",
-                message: "Invalid credentials",
+                error: "Invalid credentials",
             });
         }
 
@@ -231,7 +310,7 @@ app.post("/api/login", async (req, res) => {
         console.error("Login error:", error);
         res.status(500).json({
             status: "error",
-            message: "An internal server error occurred",
+            error: "An internal server error occurred",
         });
     }
 });
@@ -239,7 +318,7 @@ app.post("/api/login", async (req, res) => {
 //GETTING USER DETAILS (REVIEW LATER, NOT FUNCTIONAL)
 app.get("/api/user", async (req, res) => {
     try {
-        const response = await fetch("/verify/${token}", {
+        const response = await fetch("/api/verify/${token}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -260,7 +339,7 @@ app.get("/api/user", async (req, res) => {
 });
 
 app.use("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/error.html"));
+    res.sendFile(path.join(__dirname, "../public/html/error.html"));
 });
 
 //SERVER LISTENING ON PORT
