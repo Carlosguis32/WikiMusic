@@ -9,7 +9,7 @@ async function login() {
         "user-library-modify%20user-read-playback-state%20user-modify-playback-state%20user-top-read%20" +
         "user-read-recently-played";
 
-    const response = await fetch("/api/login", {
+    let response = await fetch("/api/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -20,18 +20,12 @@ async function login() {
         }),
     });
 
-    if (response.status === 200) {
+    response = await response.json();
+
+    if (response.ok) {
         sessionStorage.setItem("auth_redirect", "true");
         window.location.href = SPOTIFY_AUTHORIZATION_URL;
     } else {
-        const error = await response.json();
-        errorHandler(error);
+        errorHandler(response);
     }
-}
-
-async function logout() {
-    const config = await fetch("/env").then((config) => config.json());
-    sessionStorage.clear();
-    localStorage.clear();
-    window.location.href = "/index";
 }
