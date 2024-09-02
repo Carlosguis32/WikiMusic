@@ -13,10 +13,7 @@ const connectToMongoDB = async () => {
         });
 
         cachedDb = client.connection;
-        cachedDb.on("error", console.log("MongoDB connection error: " + error));
-        cachedDb.once("open", () => {
-            console.log("Connected to MongoDB");
-        });
+        console.log("MongoDB connected successfully");
         return cachedDb;
     } catch (error) {
         console.error("Error when connecting to MongoDB:", error);

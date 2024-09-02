@@ -13,6 +13,10 @@ const app = express();
 const connectToMongoDB = require("../api/database.js");
 require("dotenv").config();
 
+//JSON PARSING
+app.use(express.json());
+app.use(cors());
+
 //SERVING STATIC FILES
 app.use(express.static(path.join(__dirname, "../public")));
 
@@ -111,10 +115,6 @@ const userSchema = new mongoose.Schema({
 
 //CREATING USER MODEL
 const User = mongoose.model("User", userSchema);
-
-//JSON PARSING
-app.use(express.json());
-app.use(cors());
 
 //VERIFYING EMAIL AND SAVING USER TO DATABASE
 app.get("/api/verify/:token", async (req, res) => {
