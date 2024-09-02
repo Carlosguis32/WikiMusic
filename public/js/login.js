@@ -9,7 +9,7 @@ async function login() {
         "user-library-modify%20user-read-playback-state%20user-modify-playback-state%20user-top-read%20" +
         "user-read-recently-played";
 
-    let response = await fetch("/api/login", {
+    const response = await fetch("/api/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -20,12 +20,10 @@ async function login() {
         }),
     });
 
-    response = await response.json();
-
     if (response.ok) {
         sessionStorage.setItem("auth_redirect", "true");
         window.location.href = SPOTIFY_AUTHORIZATION_URL;
     } else {
-        errorHandler(response);
+        errorHandler(await response.json());
     }
 }
