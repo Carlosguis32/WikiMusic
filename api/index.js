@@ -238,7 +238,7 @@ app.post(
             };
 
             await transporter.sendMail(mailOptions);
-            await newUser.save();
+            /*await newUser.save();
 
             try {
                 setTimeout(async () => {
@@ -250,7 +250,7 @@ app.post(
                 }, 1 * 60 * 1000);
             } catch (error) {
                 console.log("Verification token cleanup error:", error);
-            }
+            }*/
 
             res.status(201).json({
                 status: "success",
