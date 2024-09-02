@@ -1,6 +1,7 @@
 //IMPORTING REQUIRED PACKAGES
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
@@ -113,6 +114,7 @@ const User = mongoose.model("User", userSchema);
 
 //JSON PARSING
 app.use(express.json());
+app.use(cors());
 
 //VERIFYING EMAIL AND SAVING USER TO DATABASE
 app.get("/api/verify/:token", async (req, res) => {
