@@ -144,20 +144,13 @@ app.post(
 
             const { username, email, password } = req.body;
 
-            const emailValidation = await validate({
-                email,
-                validateRegex: true,
-                validateMx: true,
-                validateTypo: true,
-            });
-
-            if (!emailValidation.valid) {
-                return res.status(400).json({ error: "Invalid email" });
-            }
+            console.log("Before checking existing user");
 
             const existingUser = await sql`
                 SELECT id FROM users WHERE email = ${email};
             `;
+
+            console.log("After checking existing user");
 
             if (existingUser.length > 0) {
                 return res.status(400).json({
