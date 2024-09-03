@@ -8,9 +8,8 @@ const { body, validationResult } = require("express-validator");
 const { validate } = require("deep-email-validator");
 const path = require("path");
 const app = express();
-import { sql } from "@vercel/postgres";
+const { sql } = require("@vercel/postgres");
 const createUsersTable = require("../api/database.js");
-import { sql } from "@vercel/postgres";
 require("dotenv").config();
 
 //SERVING STATIC FILES
