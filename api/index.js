@@ -8,7 +8,9 @@ const { body, validationResult } = require("express-validator");
 const { validate } = require("deep-email-validator");
 const path = require("path");
 const app = express();
-const { connectToMongoDB, User } = require("../api/database.js");
+import { sql } from "@vercel/postgres";
+const createUsersTable = require("../api/database.js");
+import { sql } from "@vercel/postgres";
 require("dotenv").config();
 
 //SERVING STATIC FILES
@@ -66,7 +68,7 @@ app.get("/html/error/:status/:statusText", (req, res) => {
 });
 
 //CONNECTING TO DATABASE
-connectToMongoDB();
+createUsersTable();
 
 //JSON PARSING
 app.use(express.json());
@@ -84,6 +86,7 @@ app.get("/api/verify/:token", async (req, res) => {
         }
 
         let decoded;
+
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
         } catch (err) {
@@ -93,26 +96,25 @@ app.get("/api/verify/:token", async (req, res) => {
             });
         }
 
-        const user = await User.findOne({
-            email: decoded.email,
-            verificationToken: token,
-            verified: false,
-        });
+        const user = await sql`
+            SELECT * FROM users WHERE email = ${decoded.email} AND verificationToken = ${token} AND verified = false;
+        `;
 
-        if (!user) {
+        if (user.length === 0) {
             return res.status(404).json({
                 status: "error",
                 error: "User not found or already verified",
             });
         }
 
-        user.verified = true;
-        user.verificationToken = undefined;
-        await user.save();
+        await sql`
+            UPDATE users SET verified = true, verificationToken = NULL WHERE email = ${decoded.email};
+        `;
 
         res.sendFile(path.join(__dirname, "../public/html/email_verified.html"));
     } catch (error) {
         console.error("Verification error:", error);
+
         res.status(500).json({
             status: "error",
             error: "An error occurred during email verification",
@@ -143,12 +145,6 @@ app.post(
 
             const { username, email, password } = req.body;
 
-            const existingUser = await User.findOne({ email });
-
-            if (existingUser) {
-                return res.status(400).json({ error: "User already exists" });
-            }
-
             const emailValidation = await validate({
                 email,
                 validateRegex: true,
@@ -160,17 +156,18 @@ app.post(
                 return res.status(400).json({ error: "Invalid email" });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 12);
+            const existingUser = await sql`
+                SELECT id FROM users WHERE email = ${email};
+            `;
+
+            if (existingUser.length > 0) {
+                return res.status(400).json({
+                    status: "error",
+                    message: "Email already exists. Please use a different email.",
+                });
+            }
 
             const verificationToken = jwt.sign({ username, email }, process.env.JWT_SECRET, { expiresIn: "10m" });
-
-            const newUser = new User({
-                username,
-                email,
-                password: hashedPassword,
-                verified: false,
-                verificationToken,
-            });
 
             const transporter = nodemailer.createTransport({
                 service: "gmail",
@@ -193,26 +190,23 @@ app.post(
             };
 
             await transporter.sendMail(mailOptions);
-            await newUser.save();
 
-            try {
-                setTimeout(async () => {
-                    const user = await User.findOne({ email });
-                    console.log(user);
-                    if (user && !user.verified) {
-                        await User.deleteOne({ email });
-                    }
-                }, 1 * 60 * 1000);
-            } catch (error) {
-                console.log("Verification token cleanup error:", error);
-            }
+            const hashedPassword = await bcrypt.hash(password, 12);
+
+            const result = await sql`
+                INSERT INTO users (username, email, password ,verificationToken)
+                VALUES (${username}, ${email}, ${hashedPassword}, ${verificationToken})
+                RETURNING id, username, email ,verificationToken;
+            `;
+
+            console.log("New unverified registered user: " + result);
 
             res.status(201).json({
                 status: "success",
                 message: "User registered successfully. Please check your email to verify your account.",
             });
         } catch (error) {
-            console.error("Signup error:", error);
+            console.error("Signup error: ", error);
             res.status(500).json({
                 status: "error",
                 error: "An error occurred during registration. Please try again later.",
@@ -226,9 +220,6 @@ app.post("/api/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        console.log(email);
-        console.log(password);
-
         if (!email || !password) {
             return res.status(400).json({
                 status: "error",
@@ -236,33 +227,46 @@ app.post("/api/login", async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email }).select("+password");
-        console.log(user);
+        const userEmail = await sql`
+            SELECT * FROM users WHERE email = ${email}
+        `;
 
-        if (!user) {
+        if (userEmail.length === 0) {
             return res.status(401).json({
                 status: "error",
-                error: "Invalid credentials",
+                error: "User does not exist",
             });
         }
 
-        if (!user.verified) {
+        const userVerification = await sql`
+            SELECT verified FROM users WHERE email = ${email}
+        `;
+
+        if (userVerification === false) {
             return res.status(403).json({
                 status: "error",
                 error: "Email not verified",
             });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const userPassword = await sql`
+            SELECT password FROM users WHERE email = ${email}
+        `;
+
+        const passwordMatch = await bcrypt.compare(password, userPassword.rows[0].password);
 
         if (!passwordMatch) {
             return res.status(401).json({
                 status: "error",
-                error: "Invalid credentials",
+                error: "Wrong password, please try again",
             });
         }
 
-        const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const username = await sql`
+            SELECT username FROM users WHERE email = ${email}
+        `;
+
+        const token = jwt.sign({ username: username, email: email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         res.status(200).json({
             status: "success",
@@ -289,12 +293,20 @@ app.get("/api/user", async (req, res) => {
             },
         });
 
-        if (response.status === 200) {
-            const user = await User.findOne({ email: req.user.email });
-            if (!user) {
+        if (response.ok) {
+            const email = await sql`
+                SELECT email FROM users WHERE email = ${email}
+            `;
+
+            if (email.length === 0) {
                 return res.status(404).json({ error: "User not found" });
             }
-            res.status(200).json({ username: user.username, email: user.email });
+
+            const username = await sql`
+                SELECT username FROM users WHERE email = ${email}
+            `;
+
+            res.status(200).json({ username: username, email: email });
         }
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });

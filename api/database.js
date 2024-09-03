@@ -1,57 +1,22 @@
-const mongoose = require("mongoose");
+import { sql } from "@vercel/postgres";
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: 3,
-        maxlength: 20,
-    },
-
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
-    },
-
-    password: {
-        type: String,
-        required: true,
-        select: false,
-    },
-
-    verified: {
-        type: Boolean,
-        required: true,
-    },
-
-    verificationToken: {
-        type: String,
-    },
-});
-
-const User = mongoose.model("User", userSchema);
-
-let cachedDb = null;
-
-const connectToMongoDB = async () => {
-    if (cachedDb) {
-        return cachedDb;
-    }
-
+async function createUsersTable() {
     try {
-        const client = await mongoose.connect(process.env.MONGODB_URI);
-        cachedDb = client.connection;
-        console.log("MongoDB connected successfully");
-        return cachedDb;
+        await sql`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          username VARCHAR(255) UNIQUE NOT NULL,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          verified BOOLEAN DEFAULT FALSE NOT NULL,
+          verificationToken VARCHAR(255),
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `;
+        console.log("Tabla de usuarios creada con éxito");
     } catch (error) {
-        console.error("Error when connecting to MongoDB:", error);
-        throw error;
+        console.error("Error al crear la tabla de usuarios:", error);
     }
-};
+}
 
-module.exports = { connectToMongoDB, User };
+module.exports = createUsersTable;
