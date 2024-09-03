@@ -1,6 +1,5 @@
 //IMPORTING REQUIRED PACKAGES
 const express = require("express");
-const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
@@ -9,7 +8,7 @@ const { body, validationResult } = require("express-validator");
 const { validate } = require("deep-email-validator");
 const path = require("path");
 const app = express();
-const connectToMongoDB = require("../api/database.js");
+const { connectToMongoDB, User } = require("../api/database.js");
 require("dotenv").config();
 
 //SERVING STATIC FILES
@@ -66,50 +65,8 @@ app.get("/html/error/:status/:statusText", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/html/error.html"));
 });
 
-//CREATING USER SCHEMA
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: 3,
-        maxlength: 20,
-    },
-
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
-    },
-
-    password: {
-        type: String,
-        required: true,
-        select: false,
-    },
-
-    verified: {
-        type: Boolean,
-        required: true,
-    },
-
-    verificationToken: {
-        type: String,
-    },
-});
-
-//CREATING USER MODEL
-const User = mongoose.model("User", userSchema);
-
 //CONNECTING TO DATABASE
-try {
-    connectToMongoDB();
-} catch (error) {
-    console.error("Database connection error:", error);
-}
+connectToMongoDB();
 
 //JSON PARSING
 app.use(express.json());
@@ -236,7 +193,7 @@ app.post(
             };
 
             await transporter.sendMail(mailOptions);
-            /*await newUser.save();
+            await newUser.save();
 
             try {
                 setTimeout(async () => {
@@ -248,7 +205,7 @@ app.post(
                 }, 1 * 60 * 1000);
             } catch (error) {
                 console.log("Verification token cleanup error:", error);
-            }*/
+            }
 
             res.status(201).json({
                 status: "success",
