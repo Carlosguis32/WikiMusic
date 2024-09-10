@@ -1,14 +1,19 @@
 async function signup() {
+    const username = document.getElementById("usernameInput").value;
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("passwordInput").value;
+    const confirmPassword = document.getElementById("confirmPasswordInput").value;
+
     const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            username: document.getElementById("usernameInput").value,
-            email: document.getElementById("emailInput").value,
-            password: document.getElementById("passwordInput").value,
-            confirmPassword: document.getElementById("confirmPasswordInput").value,
+            username,
+            email,
+            password,
+            confirmPassword,
         }),
     });
 
