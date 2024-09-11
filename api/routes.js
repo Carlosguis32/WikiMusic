@@ -84,7 +84,7 @@ app.get("/api/verify/:token", async (req, res) => {
         }
 
         const user = await sql`
-            SELECT * FROM users WHERE email = ${decoded.email} AND verificationToken = ${token} AND verified = false;
+            SELECT * FROM "users" WHERE "email" = ${decoded.email} AND "verificationToken" = ${token} AND "verified" = false;
         `;
 
         if (user.length === 0) {
@@ -95,7 +95,7 @@ app.get("/api/verify/:token", async (req, res) => {
         }
 
         await sql`
-            UPDATE users SET verified = true, verificationToken = NULL WHERE email = ${decoded.email};
+            UPDATE "users" SET "verified" = true, "verificationToken" = NULL WHERE "email" = ${decoded.email};
         `;
 
         res.sendFile(path.join(__dirname, "../public/html/email_verified.html"));
@@ -138,7 +138,7 @@ app.post(
             const { username, email, password } = req.body;
 
             const existingUser = await sql`
-                SELECT id FROM users WHERE email = ${email};
+                SELECT "id" FROM "users" WHERE "email" = ${email};
             `;
 
             if (existingUser.length > 0) {
@@ -175,9 +175,9 @@ app.post(
             const hashedPassword = await bcrypt.hash(password, 12);
 
             const result = await sql`
-                INSERT INTO users (username, email, password ,verificationToken)
+                INSERT INTO "users" ("username", "email", "password" ,"verificationToken")
                 VALUES (${username}, ${email}, ${hashedPassword}, ${verificationToken})
-                RETURNING id, username, email ,verificationToken;
+                RETURNING "id", "username", "email" ,"verificationToken";
             `;
 
             console.log("New unverified registered user: " + result);
