@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="/css/common.css" />
+		<link rel="stylesheet" href="/css/signup.css" />
+		<link rel="icon" href="/public/music_notes.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+			rel="stylesheet" />
+
+		<script src="/js/common.js"></script>
+		<script src="/js/signup.js"></script>
+
+		<title>WikiMusic - Sign Up</title>
+	</head>
+
+	<body>
+		<div id="signupComponents">
+			<h1 class="title">Create an account</h1>
+
+			<input type="text" id="usernameInput" class="userInput" placeholder="Enter your username" />
+			<input type="text" id="emailInput" class="userInput" placeholder="Enter your email" />
+			<input type="password" id="passwordInput" class="userInput" placeholder="Create your password" />
+			<input type="password" id="confirmPasswordInput" class="userInput" placeholder="Confirm your password" />
+
+			<button id="signupButton" class="welcomeButton" onclick="signup()">Sign Up</button>
+		</div>
+
+		<dialog id="modalDialog" class="modalDialog">
+			<p id="modalDialogText" class="subtitle textModal"></p>
+			<p id="modalDialogDescription" class="subtitle textModal"></p>
+			<button
+				id="modalDialogCloseButton"
+				class="welcomeButton modalDialogCloseButton"
+				onclick="closeErrorDialog()">
+				Close
+			</button>
+		</dialog>
+	</body>
+</html>

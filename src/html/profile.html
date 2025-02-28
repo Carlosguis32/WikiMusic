@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="stylesheet" href="/css/common.css" />
+		<link rel="stylesheet" href="/css/profile.css" />
+		<link rel="icon" href="/public/music_notes.svg" />
+
+		<script src="/js/common.js"></script>
+		<script src="/js/menu_bar.js"></script>
+		<script src="/js/api_methods.js"></script>
+		<script src="/js/links.js"></script>
+		<script src="/js/profile.js"></script>
+
+		<title>Wikimusic - Profile</title>
+	</head>
+
+	<body>
+		<div id="topBarMenu"></div>
+
+		<div class="container">
+			<h1 id="profileTitle" class="welcomeTitle">Your Spotify Profile</h1>
+
+			<main>
+				<div class="profileImageContainer">
+					<img
+						src="/placeholder.svg?height=200&width=200"
+						alt="Profile Picture"
+						id="profileImage"
+						onerror="this.src='/public/user_avatar.svg'" />
+				</div>
+
+				<div class="profileInfo">
+					<div class="infoItem">
+						<span class="profileData">Name:</span>
+						<span class="value" id="profileName"></span>
+					</div>
+					<div class="infoItem">
+						<span class="profileData">Email:</span>
+						<span class="value" id="profileEmail"></span>
+					</div>
+					<div class="infoItem">
+						<span class="profileData">Country:</span>
+						<span class="value" id="profileCountry"></span>
+					</div>
+					<div class="infoItem">
+						<span class="profileData">Subscription:</span>
+						<span class="value" id="profileSubscription"></span>
+					</div>
+					<div class="infoItem">
+						<span class="profileData">Followers:</span>
+						<span class="value" id="profileFollowers"></span>
+					</div>
+					<div class="infoItem">
+						<span class="profileData">ID:</span>
+						<span class="value" id="profileID"></span>
+					</div>
+				</div>
+
+				<a href="#" id="profileLink" class="spotifyLink" target="_blank" rel="noopener noreferrer">
+					View Spotify Profile <i class="fas fa-external-link-alt"></i>
+				</a>
+			</main>
+		</div>
+
+		<script>
+			setProfileInfoPage();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="/css/common.css" />
+		<link rel="stylesheet" href="/css/home.css" />
+		<link rel="icon" href="/public/music_notes.svg" />
+
+		<script src="/js/common.js"></script>
+		<script src="/js/menu_bar.js"></script>
+		<script src="/js/api_methods.js"></script>
+		<script src="/js/links.js"></script>
+		<script src="/js/home.js"></script>
+
+		<title>WikiMusic - Home</title>
+	</head>
+
+	<body>
+		<div id="topBarMenu"></div>
+
+		<p id="homeTitle" class="title">Welcome to WikiMusic!</p>
+
+		<div class="gridContainer">
+			<div class="homePageComponent" href="/html/home">
+				<button class="homePageButton" onclick="window.location.href = '/html/top_items'">
+					<p class="subtitle">Top Items</p>
+					<p class="text">Discover your Spotify top listened songs and artists of the year</p>
+					<i class="fa-solid fa-star homeIcon"></i>
+				</button>
+			</div>
+
+			<div class="homePageComponent">
+				<button class="homePageButton" onclick="window.location.href = '/html/recently_played'">
+					<p class="subtitle">Recently Played</p>
+					<p class="text">Remember your recently played tracks</p>
+					<i class="fa-solid fa-clock-rotate-left homeIcon"></i>
+				</button>
+			</div>
+
+			<div class="homePageComponent">
+				<button class="homePageButton" onclick="window.location.href = '/html/profile'">
+					<p class="subtitle">Profile</p>
+					<p class="text">Explore and manage your account</p>
+					<i class="fa-solid fa-user homeIcon"></i>
+				</button>
+			</div>
+
+			<div class="homePageComponent">
+				<button class="homePageButton" onclick="switchScopeToSearchBar()">
+					<p class="subtitle">Search</p>
+					<p class="text">Search your favourite songs, artists or albums</p>
+					<i class="fa-solid fa-magnifying-glass homeIcon"></i>
+				</button>
+			</div>
+		</div>
+	</body>
+</html>
