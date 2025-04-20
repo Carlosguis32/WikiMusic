@@ -1,34 +1,42 @@
-# WikiMusic
+# 🎵 WikiMusic
 
-A web that displays data directly extracted from your Spotify profile and watch statistics about your favourite artists and songs. You can find the page **[here](https://wikimusic.vercel.app/)**
+A powerful web application that connects with your Spotify profile to provide detailed insights about your music preferences. Discover statistics about your favorite artists and songs, track your listening habits, and explore your musical journey.
 
-&nbsp;
+![Landing Page](./public/LandingPage.png)
 
-## Landing Page
+## ✨ Features
 
-<img src="./public/LandingPage.png">
+-   🎧 **Spotify Integration**: Direct connection with your Spotify profile
+-   📊 **Listening Statistics**: Detailed analysis of your music preferences
+-   🎸 **Top Artists**: Discover your most listened artists
+-   🎼 **Top Songs**: Track your favorite songs
+-   📈 **Activity Tracking**: Monitor your recent listening activity
+-   🔍 **Music Search**: Find new artists and songs
 
-> In order to use it, you need to create an account in WikiMusic, and connect it to your Spotify account.
+## 🌟 Key Features Showcase
 
-&nbsp;
+### Landing Experience
 
-## Top Artists / Songs Page
+![Landing Page](./public/LandingPage.png)
 
-<img src="./public/TopSongsPage.png">
+### Statistics Dashboard
 
-&nbsp;
+![Top Songs Page](./public/TopSongsPage.png)
 
-# Technologies Used:
+## 🚀 Technologies
 
--   **Languages:**
+### Languages
 
-    -   JavaScript
-    -   HTML
-    -   CSS
+-   JavaScript
+-   HTML
+-   CSS
 
--   **Frameworks / Utilities:**
+### Frameworks & Tools
 
-    -   Node.js
+-   Node.js
+-   Express.js
+-   Spotify Web API
 
--   **Database:**
-    -   PostgreSQL
+### Database
+
+-   PostgreSQL
